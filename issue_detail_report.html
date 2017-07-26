@@ -1,0 +1,223 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<?require_once("./common/meta_tags.php");?>
+<title><?php echo $page_title?></title>
+<link rel="stylesheet" href="css/style.css" type="text/css" />
+<script language="javascript" type="text/javascript" src="./javascripts/work_listing_detail.js"></script>
+<script language="javascript" type="text/javascript" src="./javascripts/common_report.js"></script>
+<script language="javascript" type="text/javascript" src="javascripts/calendar.js"></script>
+<script language="javascript" type="text/javascript" src="javascripts/emp_auto_sugg/auto_dynamic-list.js"></script>
+<script language="javascript" type="text/javascript" src="javascripts/emp_auto_sugg/auto_sugg_ajax.js"></script>
+<link rel="stylesheet" href="css/magicsuggest-1.3.1.css" type="text/css" />
+<script language="javascript" type="text/javascript" src="javascripts/magicsuggest-1.3.1.js"></script>
+<script language="javascript" type="text/javascript" src="javascripts/jquery_lib.js"></script>
+<script language="javascript" type="text/javascript" src="javascripts/block_ui.js"></script>
+<script type="text/javascript" src="javascripts/scrollTo.js"></script>
+<script language="javascript" type="text/javascript">
+ //<![CDATA[
+    function showSlidingDiv(){
+    $("#slidingDiv").animate({"height": "toggle"}, { duration: 500 });
+    }
+    //]]>
+</script>
+<script language="javascript">
+$(document).ready(function(){
+	showTipwindow();
+});
+function getissuedtllistrow(issue_type_id,power_id,division_id,sub_division_id,section_id,type,is_resolve){
+    var ajax = new AJAX();
+    var arrParam = new Array();
+    arrParam['issue_type_id'] = issue_type_id;
+    arrParam['power_id'] = power_id;
+    arrParam['division_id'] = division_id;
+    arrParam['sub_division_id'] = sub_division_id;
+    arrParam['section_id'] = section_id;
+    arrParam['type'] = type;
+    arrParam['is_resolve'] = is_resolve;
+    document.getElementById('issuewisedtllistdiv').innerHTML = '<img src="./images/ajax-loader.gif"/>';
+    var fromTop = $('#issuewisedtllistdiv').position().top;
+    $(window).scrollTo( fromTop+'px', '100%');			
+    ajax.getRequest('./controller/get_issue_detail_abstract_report.php', arrParam, showResponseissuedtl);			
+}
+
+function showResponseissuedtl(retVaL){
+    $.unblockUI();
+    document.getElementById('issuewisedtllistdiv').innerHTML = '';
+    document.getElementById('issuewisedtllistdiv').innerHTML = retVaL;
+}
+function getIssueList(issue_type_id,power_id,type,is_resolve){
+    var ajax = new AJAX();
+    var arrParam = new Array();
+    arrParam['issue_type_id'] = issue_type_id;
+    arrParam['power_id'] = power_id;
+    arrParam['type'] = type;
+    arrParam['is_resolve'] = is_resolve;
+    document.getElementById('issuewiserepotdiv').innerHTML = '<img src="./images/ajax-loader.gif"/>';
+    var fromTop = $('#issuewiserepotdiv').position().top;
+    $(window).scrollTo( fromTop+'px', '100%');          
+    ajax.getRequest('./controller/get_issue_detail_list.php', arrParam, showResponsetenderlist);           
+}
+
+function showResponsetenderlist(retVaL){
+    $.unblockUI();
+    document.getElementById('issuewiserepotdiv').innerHTML = '';
+     document.getElementById('issuewisedtllistdiv').innerHTML = '';
+    document.getElementById('issuewiserepotdiv').innerHTML = retVaL;
+
+}
+    function PrintDiv() {    
+       var divToPrint = document.getElementById('divToPrint');
+       var popupWin = window.open('', '_blank', 'width=900,height=600');
+       document.getElementById('download').style.display='none';
+       $(".download").attr("style", "display:none");
+       popupWin.document.open(); 
+       popupWin.document.write('<html><body onload="window.print()">' + divToPrint.innerHTML + '</html>');
+       document.getElementById('download').style.display='block';
+       $(".download").attr("style", "display:block");
+        popupWin.document.close();
+
+            }
+</script>
+
+<style>
+    font-family:Verdana, Geneva, sans-serif;
+    font-size:14px;}
+
+    #slidingDiv
+    {
+        display: none;
+        overflow:auto;
+        background-color: ;
+        padding:0px;
+        margin-top:10px;
+    }
+div.growlUI { background: url(images/ajax_process.gif) no-repeat; background-position: center center; height: 85px;font-size:13px; color: white;  }
+div.growlUI h4, div.growlUI h5 {color: white; padding: 5px 5px 5px 10px; text-align: left !important;}
+</style>
+<? if($work_allotment_status != '' || $wings_id != 0 || $work_creation_date_range1 !='' || $road_name !=''){?>
+<script>
+setTimeout('showSlidingDiv()',1000);
+setTimeout('swapImage("'+sitePath+'images/arrow_down.gif")', 1000);
+</script>
+<? } ?></head>
+<body class="bodymain">
+<form name="frmPMS" method="POST" action="#" enctype="multipart/form-data">
+<table border="0" cellspacing="0" cellpadding="0" align="center" class="maintable">
+<? include_once ('common/header.php'); ?>
+  <tr>
+    <td colspan="2">
+		<table align="center" cellpadding="" cellspacing="0" width="100%" id='detable'>
+			<tr>
+				<td valign="top" align="center">
+<?
+if(isset($msg) && $msg != '')
+{
+?>
+					<table width="98%" class="blu2b"  style="margin-bottom:5px; font-weight:bold; text-align:center;" >
+<?
+	    				echo "<tr><td height='5' align='center'><span class='blu5b'>".$msg."</span></td></tr>";
+?>
+					</table>
+<?
+}
+?>
+					<!-- Content Area Starts -->
+					<table cellpadding="6" cellspacing="0" border="0"  align="center" width="100%">
+						<tr>
+							<td colspan="5" height="8px"></td>
+						</tr>
+						<? include_once('controller/include_issue_detail_search_option.php');?>							
+
+						<tr>
+							<td colspan="5" height="8px"></td>
+						</tr>
+					</table>
+					<!-- Ends of Content Area -->
+				</td>
+			</tr>
+            <tr>
+				<td height="350" valign="top">
+<?if($get_issue_abstracy_detail_cnt > 0){?>
+                    <!--
+                    <table width="100%">
+                        <tr>
+                           <td  valign="top" align="right">
+                                <span class=""><a href="javascript:void(0);" onclick="javascript:NewPopupWindow('index.php?page=328', 1000,800);"  class="lnsky2b" >Print Report </a>&nbsp;&nbsp;</span>
+                           </td>
+                        </tr>
+                    </table>
+                    -->
+                    <table width="100%" cellspacing="1" cellpadding="4"  class="tableWithFloatingHeader listtable" border="0" style="margin-bottom:20px;" align="center">
+                        <thead>
+                            <tr bgcolor="#FFFFFF">
+                                <th class="blk2b" valign="top">Sl. No.</th>
+                                <th class="blk2b" valign="top">Issue Type Name</th>
+                                                          
+                                <th class="blk2b" valign="top">Total Issue</th>
+                                <th class="blk2b" valign="top">Total Issue Resolve</th>
+                            </tr>
+<?php
+        $totissueapproved = 0;
+        $totissueresolve = 0;
+        if($get_issue_abstracy_detail_cnt > 0){
+            while($get_issue_abstarct_detail_row = pg_fetch_assoc($get_issue_abstarct_detail_res))
+            {
+                $cnt++;
+                $totissueapproved=$totissueapproved+$get_issue_abstarct_detail_row['tot_issue'];
+                $totissueresolve=$totissueresolve+$get_issue_abstarct_detail_row['tot_issue_resolve'];
+             
+           
+?>
+
+                            <tr bgcolor="#FFFFFF"> 
+                                <td class="blk2" align="center"><?php echo $cnt?></td>
+                                <td class="blk2" align="left"><?php echo $get_issue_abstarct_detail_row['issue_type_name']?> 
+                                </td>
+                           
+                                <td class="blk2" align="center">
+                                    <a class="lnblk2b" href="javascript:void(0);" onclick="javascript:getIssueList('<?php echo $get_issue_abstarct_detail_row['issue_type_id']?>','<?php echo  $sess_power_id?>','2');"><?php echo $get_issue_abstarct_detail_row['tot_issue']?></a>  
+                                    &nbsp;<a class="lnblk2b" href="javascript:void(0);" onclick="javascript:getIssueList('<?php echo $get_issue_abstarct_detail_row['issue_type_id']?>','<?php echo  $sess_power_id?>','2');">[Cilck here to view detail]</a>  
+
+                                    </td>
+                                 <td class="blk2" align="center">
+                                     <a class="lnblk2b" href="javascript:void(0);" onclick="javascript:getIssueList('<?php echo $get_issue_abstarct_detail_row['issue_type_id']?>','<?php echo  $sess_power_id?>','2','R');"><?php echo $get_issue_abstarct_detail_row['tot_issue_resolve']?></a>  
+                                    &nbsp;<a class="lnblk2b" href="javascript:void(0);" onclick="javascript:getIssueList('<?php echo $get_issue_abstarct_detail_row['issue_type_id']?>','<?php echo  $sess_power_id?>','2','R');">[Cilck here to view detail]</a> 
+                                 </td> 
+
+                            </tr>
+<?
+            }
+        }
+?>
+                         <tr bgcolor="#FFFFFF"> 
+                            <td class="blk2b" colspan="2">Total</td>
+                            <td class="blk2b" align="center"><?php echo $totissueapproved?></td>
+                            <td class="blk2b" align="center"><?php echo $totissueresolve?></td>
+                        </tr>
+
+<?}?>
+				</td>
+			</tr>
+		</table>
+        <div id="issuewiserepotdiv">
+    
+        </div>	
+
+        <div id="issuewisedtllistdiv">
+
+        </div>	                    
+                    
+	</td>
+  </tr>
+<? include_once ('common/footer.php'); ?>
+</table>
+
+<script language="javascript" type="text/javascript">
+		var obj;
+		obj = document.frmFMS;
+</script>
+</form>
+</body>
+</html>

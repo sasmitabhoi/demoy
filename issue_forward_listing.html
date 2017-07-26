@@ -1,0 +1,307 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<? require_once("./common/meta_tags.php");?>
+<title><?php echo $page_title?></title>
+<link rel="stylesheet" href="css/style.css" type="text/css" />
+<script language="javascript" type="text/javascript" src="./javascripts/view_user_detail.js"></script>
+<script language="javascript" type="text/javascript" src="javascripts/jquery_lib.js"></script>
+<script language="javascript" type="text/javascript" src="javascripts/calendar.js"></script>
+<script language="javascript" type="text/javascript" src="javascripts/block_ui.js"></script>
+
+<?php
+//$searchurl='search_issue_list.php?inspected_by='.$inspected_by.'&wings_id='.$wings_id.'&circle_id='.$circle_id.'&complinece_sts='.$complinece_sts;
+$searchurl="index.php?page=325";
+?>
+<script language="javascript" type="text/javascript">
+function getPaginator(pgn)
+{
+	document.getElementById('Page').value = pgn;
+	$("form[name='frmPMS']").submit();
+	
+}
+</script>
+<script>
+    function PrintDiv() {    
+       var divToPrint = document.getElementById('divToPrint');
+       var popupWin = window.open('', '_blank', 'width=900,height=600');
+       document.getElementById('file').style.display='none';
+       document.getElementById('head').style.display='block';
+       $(".files").attr("style", "display:none");
+       popupWin.document.open();
+       popupWin.document.write('<html><body onload="window.print()">' + divToPrint.innerHTML + '</html>');
+       document.getElementById('file').style.display='';
+       document.getElementById('head').style.display='none';
+       $(".files").attr("style", "");
+        popupWin.document.close();
+            }
+</script>
+<script type="text/javascript">
+  (function() {
+    var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+    po.src = 'https://apis.google.com/js/plusone.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+  })();
+</script>      
+<script type="text/javascript">
+var jq = $.noConflict();
+</script>	
+<script type="text/javascript" src="js/paging/jquery-1.10.1.min.js"></script>
+<script type="text/javascript" src="js/paging/scrollpaging.js"></script>
+<script type="text/javascript">
+var jq = $.noConflict();
+</script>
+ <script type="text/javascript">
+jq(function() {
+	var offset = 5;
+	jq(document).scrollPaging({
+		url : '<?php echo $searchurl;?>', 
+		totalRecordCount : <?php echo $get_issue_report_cnt+10;?>,//required
+		offset :offset, //required
+		data :'key=value',//you can pass extra params here
+		beforeSend : function(){
+		var loader = jq('<div id="scrollLoader">loading please wait ....</div>')
+		jq('#wrapper').append(loader);
+		},
+		success : function(result) { //required
+		jq('.nexttrcls').hide();	
+		jq('#scrollLoader').remove();
+		jq('#wrapper').append(result);
+	}
+	});
+});
+</script>
+<style>
+#scrollLoader {
+	color: green;
+	float: left;
+	font-size: 16px;
+	font-weight: bold;
+	padding: 10px;
+	text-align: center;
+	text-transform: uppercase;
+	width: 100%;
+}
+</style>
+<style type="text/css">
+	
+	.ispectiontbl td {
+    -moz-border-bottom-colors: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    border-color: #ffffff;
+    border-image: none;
+    border-style: solid;
+    border-width: 0 1px 1px 0;
+    color: #000000;
+    font-family: Verdana;
+    font-size: 13px;
+    font-weight: normal;
+    padding: 7px;
+    text-align: left;
+    vertical-align: middle;
+}
+/*@media print {
+    body { font-size: 10pt }
+    .blk2b{
+    	color: red;
+    }
+
+  }*/
+</style>
+
+
+</head>
+<body class="bodymain">
+<form name="frmPMS" method="post" id="frmPMS">	
+<input type="hidden" name="Page" id="Page" value="1" />
+<table border="0" cellspacing="0" cellpadding="0" align="center" class="maintable">
+<? include_once ('common/header.php'); ?>
+  <tr>
+    <td colspan="2">
+		<table align="center" cellpadding="" cellspacing="0" width="100%" id='detable'>
+			<tr>
+				<td valign="top" align="center">
+<?
+if(isset($msg) && $msg != '')
+{
+?>
+					<table width="98%" class="blu2b"  style="margin-bottom:5px; font-weight:bold; text-align:center;" >
+<?
+	    				echo "<tr><td height='5' align='center'><span class='blu5b'>".$msg."</span></td></tr>";
+?>
+					</table>
+<?
+}
+?>
+					<!-- Content Area Starts -->
+					<table cellpadding="6" cellspacing="0" border="0"  align="center" width="100%">
+						<tr>
+							<td colspan="5" height="8px"></td>
+						</tr>
+						
+						<tr>
+							<td colspan="5" height="8px"></td>
+						</tr>
+					</table>
+					<!-- Ends of Content Area -->
+				</td>
+			</tr>
+            <tr>
+				<td height="350" valign="top">
+				
+					<!--- table start -->
+<?
+if($get_issue_report_cnt > 0){
+?>                  
+                      <input type="button" value="print" onclick="PrintDiv();" />
+                      <div id="divToPrint" style="">
+                      <h4 id="head" style="color:black;display:none;"> Issue Forward Listing </h4>
+					 <table width="100%" cellspacing="2" cellpadding="4" border="0" align="center" class="ispectiontbl">
+		                <tr class="listtabletr1">
+		                
+							<td class="blk2b" width="3%" align="center">#</td>
+							<td class="blk2b" width="8%" align="center">Work Name</td>
+							<td class="blk2b" width="8%" align="center">Forwarded From</td>
+							<td class="blk2b" width="8%" align="center">Forwarded To</td>
+							<td class="blk2b" width="8%">Issue Type</td>
+							<td class="blk2b" width="8%">Issue Description</td>
+							<td class="blk2b" width="8%">Date of Issue</td>							
+							<td class="blk2b" id="file" width="8%">File</td>                 
+							<td class="blk2b" width="8%" align="center" >Action</td>   
+		                </tr>	
+					<?php
+					$cnt = 0;
+					$outerpagecnt = 0;
+					$outerpagecnt = $Page_Start;
+					for($i=$Page_Start;$i<$Page_End;$i++)
+					{
+							$cnt++;
+							$outerpagecnt++;
+							if($cnt%2==0)
+							{
+								$bgcolor='class="listtabletr2"';
+							}
+							else
+							{
+								$bgcolor='class="listtabletr3"';
+							}
+
+						//$get_complience_sql = "SELECT * FROM pm_inspection_detail where inspection_id=".$row['inspection_id']."";
+										/**** GET THE USER DETAIL ***/
+						$FROMFULLNAME = '';
+						$FROMDESIGNAME = '';
+						$getuserspecarr = array();
+						$getuserspecval = getuserSpecification1(pg_fetch_result($get_issue_report_res,$i,"user_id"));
+						$getuserspecarr =    explode("**",$getuserspecval);
+						$FROMFULLNAME =   $getuserspecarr[0];
+						$FROMDESIGNAME =  $getuserspecarr[1];
+						$FROMCRINAME =  $getuserspecarr[3];
+						$FROMDIVNAME =  $getuserspecarr[4];
+						$FROMWINGNAME =  $getuserspecarr[5];
+						/**** GET THE USER DETAIL ***/
+						$FULLNAME = '';
+						$DESIGNAME = '';
+						$getuserspecarr = array();
+						$getuserspecval = getuserSpecification1(pg_fetch_result($get_issue_report_res,$i,"to_user_id"));
+						$getuserspecarr =    explode("**",$getuserspecval);
+						$FULLNAME =   $getuserspecarr[0];
+						$DESIGNAME =  $getuserspecarr[1];
+						$CRINAME =  $getuserspecarr[3];
+						$DIVNAME =  $getuserspecarr[4];
+						$WINGNAME =  $getuserspecarr[5];	
+						if(trim(pg_fetch_result($get_issue_report_res,$i,"work_name")) != ''){	
+					?>
+					 <tr  <?php echo $bgcolor?>>
+						<td class="blk2" align="center" valign="top" width="3%" >
+						<?php //echo pg_fetch_result($get_issue_report_res,$i,"issue_detail_id");?>
+						<?php echo  $cnt;?>
+						</td>
+						<td class="blk2" align="center" valign="top">
+							<?php echo wordwrap(pg_fetch_result($get_issue_report_res,$i,"work_name"), 10, "<br/>", true) ;?>
+						</td>
+						<td class="blk2" align="left" valign="top">
+							<?php echo wordwrap($FROMDESIGNAME, 10, "<br/>", true) ;?><br/>
+							<?if($FROMWINGNAME != ''){?>	
+							<span class="blk3b">Wing<br/></span>
+							<span class="vlt2b"><?php echo wordwrap($FROMWINGNAME, 10, "<br/>", true) ;?><br/></span>	
+							<?}?>	
+							<?if($FROMCRINAME != ''){?>	
+							<span class="blk3b">Circle<br/></span>
+							<span class="vlt2b"><?php echo wordwrap($FROMCRINAME, 10, "<br/>", true) ;?></span>	
+							<?}?>	
+							<?if($FROMDIVNAME != ''){?>	
+							<span class="blk3b">Division<br/></span>
+							<span class="vlt2b"><?php echo wordwrap($FROMDIVNAME, 10, "<br/>", true) ;?><br/></span>	
+							<?}?>		
+						</td>
+
+						<td class="blk2" align="left" valign="top">
+							<?php echo wordwrap($DESIGNAME, 10, "<br/>", true) ;?><br/>
+							<?if($WINGNAME != ''){?>	
+							<span class="blk3b">Wing<br/></span>
+							<span class="vlt2b"><?php echo wordwrap($WINGNAME, 10, "<br/>", true) ;?><br/></span>	
+							<?}?>	
+							<?if($CRINAME != ''){?>	
+							<span class="blk3b">Circle<br/></span>
+							<span class="vlt2b"><?php echo wordwrap($CRINAME, 10, "<br/>", true) ;?></span>	
+							<?}?>	
+							<?if($DIVNAME != ''){?>	
+							<span class="blk3b">Division<br/></span>
+							<span class="vlt2b"><?php echo wordwrap($DIVNAME, 10, "<br/>", true) ;?><br/></span>	
+							<?}?>		
+						</td>
+						<td class="blk2" align="center" valign="top"><?php echo pg_fetch_result($get_issue_report_res,$i,"issue_type_name");?></td>
+						<td class="blk2" align="center" valign="top"><?php echo wordwrap(pg_fetch_result($get_issue_report_res,$i,"work_issue_detail"), 10, "<br/>", true) ;?></td>
+						<td class="blk2" align="center" valign="top"><?php echo pg_fetch_result($get_issue_report_res,$i,"work_issue_date");?></td>
+						<td class="blk2 files" align="center" valign="top"><?php if(trim(pg_fetch_result($get_issue_report_res,$i,"work_issue_file")) != ''){?><a href="index.php?page=324&file=<?php echo pg_fetch_result($get_issue_report_res,$i,"work_issue_file")?>" target="_blank">Download</a><?}?></td>
+						<td class="blk2" align="center" valign="top">
+							<?php
+						   		if(pg_fetch_result($get_issue_report_res,$i,"is_work_issue_solved") == 'N'){ echo "Not Resolved";}
+						   		if(pg_fetch_result($get_issue_report_res,$i,"is_work_issue_solved") == 'P'){ echo "Pending";}
+						   		if(pg_fetch_result($get_issue_report_res,$i,"is_work_issue_solved") == 'R'){ echo "Resolved";}
+						   ?>
+						</td>
+					  </tr>
+					<?php
+						}
+					}
+					?>
+
+					</table>
+
+					
+					<span id="wrapper"></span> 
+						   
+					<!-- table end -->
+
+					<br>
+<?
+	}else{
+?>
+				<table width="100%"><tr><td class="red2b" align="center">Sorry no record found.</td></tr></table>	
+<?
+	}
+?>
+					
+
+				</td>
+				</div>
+			</tr>
+		</table>
+	</td>
+  </tr>
+  <? include_once ('view/get_box.html'); ?>
+<? include_once ('common/footer.php'); ?>
+</table>
+
+<script language="javascript" type="text/javascript">
+		var obj;
+		obj = document.frmPMS;
+
+</script>
+</form>
+</body>
+</html>

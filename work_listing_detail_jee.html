@@ -1,0 +1,205 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<?require_once("./common/meta_tags.php");?>
+<title><?php echo $page_title?></title>
+<link rel="stylesheet" href="css/style.css" type="text/css" />
+<script language="javascript" type="text/javascript" src="./javascripts/work_listing_detail.js"></script>
+<script language="javascript" type="text/javascript" src="./javascripts/common_report.js"></script>
+<script language="javascript" type="text/javascript" src="javascripts/calendar.js"></script>
+<script language="javascript" type="text/javascript" src="javascripts/emp_auto_sugg/auto_dynamic-list.js"></script>
+<script language="javascript" type="text/javascript" src="javascripts/emp_auto_sugg/auto_sugg_ajax.js"></script>
+<link rel="stylesheet" href="css/magicsuggest-1.3.1.css" type="text/css" />
+<script language="javascript" type="text/javascript" src="javascripts/magicsuggest-1.3.1.js"></script>
+<script language="javascript" type="text/javascript" src="javascripts/block_ui.js"></script>
+<script language="javascript" type="text/javascript">
+ //<![CDATA[
+    function showSlidingDiv(){
+    $("#slidingDiv").animate({"height": "toggle"}, { duration: 500 });
+    }
+    //]]>
+</script>
+<script language="javascript">
+$(document).ready(function(){
+	showTipwindow();
+});
+</script>
+<?php
+$limit = (isset($_GET['limit']) && $_GET['limit'] != 0)?(int) $_GET['limit'] : 10;
+$page1 = (isset($_GET['page1']) && $_GET['page1'] != 0)?(int) $_GET['page1'] : 0;
+$message1 = (isset($_GET['msg']) && $_GET['msg'] != '')? $_GET['msg'] : '';
+$work_updated_id = (isset($_GET['work_updated_id']) && $_GET['work_updated_id'] != '')? $_GET['work_updated_id'] : '';
+$_SESSION['work_updated_id']=$work_updated_id;
+?>
+
+<script type="text/javascript">
+		 $(document).ready(function() {		
+			getworklisting();
+			getFloatingHeadreCall();
+
+			 //e.preventDefault(); 
+		          // Call the scroll function
+		   <?php if(isset($work_updated_id) && $work_updated_id!=""){?>
+		     goToByScroll(<?php echo $work_updated_id?>);
+		    <?php }?>
+		  });
+		 //$( document ).ready(function() {
+			//$('#workid_'+$_SESSION['work_updated_id']).effect("highlight", {background-color: green}, 90);
+			//isset($_SESSION['work_updated_id']) && $_SESSION['work_updated_id'] == $row['work_id']) ? 'background-color: green' : '';
+		//});
+		function getworklisting(){
+			//alert(document.getElementById('division_id').value);
+		document.getElementById('ajax_work_listing_div').innerHTML = '<img src="./images/ajax-loader.gif"/>';
+		var ajax = new AJAX();
+		var arrParam = new Array();
+		arrParam['workid'] 			= window.magicSuggObjrefno.getValue();
+		arrParam['wings_id'] 		= document.getElementById('wings_id').value;
+		arrParam['source_fund_id'] 	= document.getElementById('source_fund_id').value;
+		arrParam['circle_id'] 		= document.getElementById('circle_id').value;
+		arrParam['division_id'] 	= document.getElementById('division_id').value;
+		arrParam['sub_division_id'] = document.getElementById('sub_division_id').value;
+		arrParam['section_id'] 		= document.getElementById('section_id').value;
+        //arrParam['work_completion'] = document.getElementById('work_completion').value;
+        arrParam['work_status'] = document.getElementById('work_status').value;
+
+        arrParam['limit'] = <?php echo $limit; ?>;
+        arrParam['page1'] = <?php echo $page1; ?>;
+
+		ajax.getRequest('./controller/include_work_listing_detail_jee.php', arrParam, showResponseWorklisting);	
+		
+		}
+		function showResponseWorklisting(retVaL){
+			document.getElementById('ajax_work_listing_div').innerHTML = '';
+			document.getElementById('ajax_work_listing_div').innerHTML = retVaL;
+			//goToByScroll(<?php echo $work_updated_id;?>)
+			//getFloatingHeadreCall();
+		}
+
+		function goToByScroll(id){
+		      // Remove "link" from the ID
+		      <?//php $test_value="avinash"; 
+		      //$encodedvalue=base64_encode($test_value);
+		      ?>
+		    //var x='<?php echo $encodedvalue;?>';
+		      //alert(x);
+		    alert('<?php echo base64_decode($message1);?>');
+		    //alert('<?php echo urldecode($message1);?>');
+		    id = id.replace("link", "");
+		      // Scroll
+		        $('html,body').animate({
+		            scrollTop: $("#workid_"+id).offset().top},
+		            'slow');
+		    }
+		    <?php if(isset($work_updated_id) && $work_updated_id!=""){?>
+		    var timesRun = 0;
+			var interval = setInterval(function(){
+			    timesRun += 1;
+			    if(timesRun === 60){
+			        clearInterval(interval);
+			        $("#workid_"+<?php echo $work_updated_id;?>).css("background-color","#e7f4fe");
+			    }else{
+			    	$("#workid_"+<?php echo $work_updated_id;?>).css("background-color", function () {
+				        this.switch = !this.switch
+				        return this.switch ? "lightgreen" : ""
+				    });
+			    }
+			    
+			}, 100);
+
+		    /*setInterval(function () {
+			    $("#workid_"+<?php //echo $work_updated_id;?>).css("background-color", function () {
+			        this.switch = !this.switch
+			        return this.switch ? "lightgreen" : ""
+			    });
+			}, 100)*/
+			<?php }?>
+
+			
+		    
+    </script>
+<style>
+    font-family:Verdana, Geneva, sans-serif;
+    font-size:14px;}
+    #workid_<?php echo $work_updated_id;?> {
+	    width:100px;
+	    height:20px;
+	    background-color:#627BAE;
+	}
+    #slidingDiv
+    {
+        display: none;
+        overflow:auto;
+        background-color: ;
+        padding:0px;
+        margin-top:10px;
+    }
+div.growlUI { background: url(images/ajax_process.gif) no-repeat; background-position: center center; height: 85px;font-size:13px; color: white;  }
+div.growlUI h4, div.growlUI h5 {color: white; padding: 5px 5px 5px 10px; text-align: left !important;}
+</style>
+<? if($work_allotment_status != '' || $wings_id != 0 || $work_creation_date_range1 !='' || $road_name !=''){?>
+<script>
+setTimeout('showSlidingDiv()',1000);
+setTimeout('swapImage("'+sitePath+'images/arrow_down.gif")', 1000);
+</script>
+<? } ?></head>
+<body class="bodymain">
+<input type="hidden" name="tcount" id="tcount" value="<?php echo $listing_cnt?>" />
+<table border="0" cellspacing="0" cellpadding="0" align="center" class="maintable">
+<? include_once ('common/header.php'); ?>
+  <tr>
+    <td colspan="2">
+		<table align="center" cellpadding="" cellspacing="0" width="100%" id='detable'>
+			<tr>
+				<td valign="top" align="center">
+<?
+if(isset($msg) && $msg != '')
+{
+?>
+					<table width="98%" class="blu2b"  style="margin-bottom:5px; font-weight:bold; text-align:center;" >
+<?
+	    				echo "<tr><td height='5' align='center'><span class='blu5b'>".$msg."</span></td></tr>";
+?>
+					</table>
+<?
+}
+?>
+					<!-- Content Area Starts -->
+					<table cellpadding="6" cellspacing="0" border="0"  align="center" width="100%">
+						<tr>
+							<td colspan="5" height="8px"></td>
+						</tr>
+						<?include_once('controller/include_search_work_listing.php');?>							
+
+						<tr>
+							<td colspan="5" height="8px"></td>
+						</tr>
+					</table>
+					<!-- Ends of Content Area -->
+				</td>
+			</tr>
+			<tr>
+				<!--<td align="right" style="padding-right:10px;"><a href="#" onclick="javascript:NewPopupWindow('index.php?page=178&submit=<?php echo $submit?>&project_head=<?php echo $project_head?>&project_type=<?php echo $project_type?>&source_fund_id=<?php echo $source_fund_id?>&wings_id=<?php echo $wings_id?>&dept_id=<?php echo $dept_id?>&circle_id=<?php echo $circle_id?>&division_id=<?php echo $division_id?>&district_id=<?php echo $district_id?>&block_id=<?php echo $block_id?>&scheme_work_id=<?php echo $short_work_id?>&fromdate=<?php echo $fromdate?>&todate=<?php echo $todate?>&get_work_id=<?php echo $get_work_id?>', 1000,800);"  class="hyperlink" >Print Report </a>&nbsp;&nbsp;<a href="#" onclick="javascript:NewPopupWindow('index.php?page=179&submit=<?php echo $submit?>&circle_id=<?php echo $circle_id?>&division_id=<?php echo $division_id?>&district_id=<?php echo $district_id?>&block_id=<?php echo $block_id?>&scheme_work_id=<?php echo $short_work_id?>&fromdate=<?php echo $fromdate?>&todate=<?php echo $todate?>&get_work_id=<?php echo $get_work_id?>', 1000,800);"  class="hyperlink" >Excel Report </a></td>-->
+			</tr>			
+			<tr>
+				<!--<td align="left" class="lnorg2b"><a href="index.php?page=191">New Work Cretaion</a></td>-->
+			</tr>            
+            <tr>
+				<td height="350" valign="top">
+					<div id="ajax_work_listing_div">
+						
+					</div>
+				</td>
+			</tr>
+		</table>
+	</td>
+  </tr>
+<? include_once ('common/footer.php'); ?>
+</table>
+
+<script language="javascript" type="text/javascript">
+		var obj;
+		obj = document.frmFMS;
+</script>
+</body>
+</html>

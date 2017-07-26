@@ -1,0 +1,49 @@
+<?php
+require_once("common/globali.php");
+require_once("common/meta_tags.php");
+$issue_detail=isset($_GET['a'])&& $_GET['a']!=''?$_GET['a']:'' ;
+$work_id=isset($_GET['b'])&& $_GET['b']!=''?$_GET['b']:'' ;
+$issue_id=isset($_GET['c'])&& $_GET['c']!=''?$_GET['c']:'' ;
+
+$issue_sql=pg_query("SELECT PID.* FROM pm_issue_detail PID where work_id=".$work_id." and issue_detail_id=".$issue_id."");
+if(pg_num_rows($issue_sql)>0){
+$get_issue_dtl_list_row=pg_fetch_assoc($issue_sql);
+}
+
+$issueaction_sql=pg_query("SELECT * FROM pm_issue_action where work_id=".$work_id." and issue_detail_id=".$issue_id."");
+
+
+$user_detail=getuserInfo($get_issue_dtl_list_row['power_id'],$get_issue_dtl_list_row['wings_id'],$get_issue_dtl_list_row['circle_id'],$get_issue_dtl_list_row['division_id'],$get_issue_dtl_list_row['sub_division_id'],$get_issue_dtl_list_row['section_id']);
+
+
+?>
+
+                <div>
+                    <?php if(pg_num_rows($issueaction_sql)>0){?>
+                        
+                        <table width="100%" align="center" cellspacing="2" cellpadding="4" border="0">
+                            <tr class="listtabletr1">
+                                <th>Sl.No.</th>
+                                <th>Issue Detail</th>
+                                <th>Status</th>
+                                <th>Issue updated file</th>
+                                <th>Remark</th>
+                            </tr>
+                            <?php $cnt=0;
+                            while($get_issue_action_row=pg_fetch_assoc($issueaction_sql)){$cnt++;
+                        ?>
+                            <tr class="listtabletr1">
+                                <td><?php echo $cnt?></td>
+                                <td><?php echo $issue_detail;?></td>
+                                <td><?php echo $get_issue_action_row['issue_status']==0?'Not Resolved':'Resolved'?></td>
+                                <td>
+									<?php if(isset($get_issue_action_row['issue_updated_file']) && $get_issue_action_row['issue_updated_file']!=''){?>
+										<a target="_blank" href="./writereaddata/issue_remark_file/<?php echo $get_issue_action_row['issue_updated_file']?>">File download</a>
+									<?php }?>
+								</td>
+                                <td><?php echo $get_issue_action_row['remark_note']?></td>
+                            </tr>
+                        
+                    <?php }}?>
+                    </table>
+                </div>

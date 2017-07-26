@@ -1,0 +1,525 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<?require_once("./common/meta_tags.php");?>
+<title><?php echo $page_title?></title>
+<link rel="stylesheet" href="css/style.css" type="text/css" />
+
+<script language="javascript" type="text/javascript" src="javascripts/calendar.js"></script>
+<script language="javascript" type="text/javascript" src="javascripts/block_ui.js"></script>
+<script language="javascript" type="text/javascript">history.go(1);</script>
+<script language="javascript">
+/*
+function addRow(){
+	var len =$('#tb tr').length;
+	$("#tb tr:last").clone().find('input[type=text],select').each(function() {
+		if(this.type == 'select-one'){
+			$(this).prop('selectedIndex',0);	
+		}
+		if(this.type == 'text'){
+			$(this).val('');	
+		}		
+		var cls = $(this).parent('td').attr('abbr');
+		$(this).attr({
+			'name':'data['+len+']['+cls+']',
+			'value': ""              
+		});
+	}).end().appendTo("#tb");
+	$(".remove").not(':first').show();
+}
+
+function addIssue(divid){
+     $("[id^='"+divid+"']").slideToggle();
+}
+function editIssue(divid){
+     $("[id^='"+divid+"']").slideToggle();
+}
+
+function addcompstatus(divid){
+     $("[id^='"+divid+"']").slideToggle();
+}
+function addcurrstatus(divid){
+     $("[id^='"+divid+"']").slideToggle();
+}
+function addIssueCompliance(divid){
+    $("[id^='"+divid+"']").slideToggle();
+}
+function addIssueResolve(divid){
+    $("[id^='"+divid+"']").slideToggle();
+}
+function viewIssuecomp(divid){
+    $("[id^='"+divid+"']").slideToggle();
+}
+*/
+function validateForm(){
+    if(document.getElementById('issue_type_id').value == 0){
+        alert('Please select issue type.');
+        return false;
+    }	
+    if(document.getElementById('work_issue_detail').value == ''){
+        alert('Please enter issue detail.');
+        return false;
+    }
+    if(document.getElementById('work_issue_date').value == ''){
+        alert('Please select date of issue.');
+        return false;
+    } 
+	var hasChecked = 0;	
+	var elements = document.getElementsByName('compliance_to_given_by[]');
+	for (var i = 0; i < elements.length; i++)
+	{
+		if (elements[i].checked)
+		{
+			hasChecked ++;
+		}
+	}
+	if(hasChecked==0)
+	{
+		alert("Please select atleast one designation.");
+		return false;
+	} 
+
+  if(confirm("Please confirm issue detail before save !"))
+    {
+       if(confirm("Are You Sure To Proceed.. !"))
+      {
+               
+             $(document).ready(function() { $.blockUI(); }); 
+        }
+        else
+        {
+            return false;
+        }
+    }
+    else
+    {
+        return false;
+    }  	
+
+}
+function fileValidation(){
+    var fileInput = document.getElementById('work_issue_file');
+    var filePath = fileInput.value;
+    var allowedExtensions = /(\.pdf|\.doc|\.docx)$/i;
+    if(!allowedExtensions.exec(filePath)){
+        alert('Please upload file having extensions .pdf/.doc only.');
+        fileInput.value = '';
+        return false;
+    }else{
+        if (fileInput.files && fileInput.files[0]) {
+            var reader = new FileReader();
+            reader.readAsDataURL(fileInput.files[0]);
+        }
+    }
+}
+</script>
+</head>
+<body class="bodymain">
+<table border="0" cellspacing="0" cellpadding="0" align="center" class="maintable">
+<? include_once ('common/header.php'); ?>
+  <tr>
+    <td colspan="2">
+		<table align="center" cellpadding="0" cellspacing="0" width="100%">
+             
+<?
+if(count($error) != 0)
+{
+?>
+			<tr>
+				<td>
+				<table width="100%" align="center" class="searchtable">
+					<tr>
+						<td height="30px;" style="padding-left:20px;" class="blk2b"><img src="images/error.jpeg" height="25" width="25"> &nbsp;ERRORS</td>
+					</tr>
+					<tr>
+						<td class="wht2" >
+							<table width="100%" border="0" align="center" style="margin-bottom:10px;" >
+								<tr>
+									<td align="left" class="red2b">
+										<ul>
+<?
+	foreach($error as $val)
+	{
+	   if($val)
+										echo "<li class=red2b>".$val."</li>";
+	}
+?>
+										</ul>
+									</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+				</table>
+				</td>
+			</tr>
+			<tr>
+				<td height="10px;">&nbsp;</td>
+			</tr>
+<?
+}
+?>
+			<tr>
+				<td height="500" valign="top" align="center">
+<?
+if(isset($msg) && $msg != '')
+{
+?>
+					<table width="98%" class="blu1b" style="margin-bottom:5px; font-weight:bold; text-align:center;" >
+<?
+	    				echo "<tr><td height='5' align='center'><img src='images/tick.png'> &nbsp;<span class='blu2b'>".$msg."</span></td></tr>";
+?>
+					</table>
+<?
+}
+?>
+
+					<!-- Content Area Starts -->
+                    
+                    
+                    <table width="98%" class="blu1b" style="margin-bottom:5px; font-weight:bold; text-align:center;" >
+                        
+                      <tr><td align="right"><a href="javascript:window.location.assign('index.php?page=217');" class="lnblu2b">Go Back</a></td></tr>   
+                     
+<?
+        $WORKNAME = '';
+        if($entry_type == 'P'){
+            $get_work_name_sql = "SELECT pre_work_name AS WORKNAME FROM pm_pre_work_detail WHERE pre_work_id = ".$issue_work_id." ";
+            $get_work_name_res = pg_query($get_work_name_sql);
+            @extract(pg_fetch_assoc($get_work_name_res));
+        }
+        if($entry_type == 'F'){
+            $get_work_name_sql = "SELECT work_name AS WORKNAME FROM pm_works WHERE work_id = ".$issue_work_id." ";
+             $get_work_name_res = pg_query($get_work_name_sql);
+            @extract(pg_fetch_assoc($get_work_name_res));           
+        }  
+?>
+                         
+					 <tr><td align="left">&nbsp;<span class="blk3b">Work Name :</span>&nbsp;&nbsp;<span class="blu3b"><?php echo $WORKNAME?></span></td></tr>   
+                     <tr>
+                         <td height="20"></td>
+                     </tr>                                          
+					 <tr>
+                        <td align="left" class="blk3b" colspan="5">
+                            <div  id="issue_div_<?php echo $row['issue_type_id']?>">
+                            <form name="frmPMS" method="post" id="frmPMS" onsubmit="javascript : return validateForm();" enctype="multipart/form-data">
+                            <input type="hidden" name="issue_work_id" id="issue_work_id"  value="<?php echo $issue_work_id?>"/>
+                            <input type="hidden" name="entry_type" id="entry_type"  value="<?php echo $entry_type?>"/>
+                            <input type="hidden" name="opt" id="opt"  value="<?php echo $opt?>"/>
+							<span style="height: 50px;"></span>																	
+                            		<table align="center" width="98%" border="0" cellpadding="4" cellspacing="1" class="entrytable">
+		                                    <tr>
+		                                       <td class="blk2" valign="top">Select Issue Type :<span style="color:red;">*</span></td>
+		                                       <td class="blk2" valign="top">
+		                                       		<select id="issue_type_id" name="issue_type_id">
+		                                       			<option value="0">Select Issue Type</option>
+ ">
+<?
+    //get the issue type
+    $query = "SELECT * FROM pm_issue_type where issue_type_id != 5";
+    $res=pg_query($query);
+    if(pg_num_rows($res)!=0)
+    {
+    	while($row = pg_fetch_assoc($res))
+       	{
+?>
+
+												<option value="<?php echo $row['issue_type_id'];?>"><?php echo $row['issue_type_name'];?></option>
+
+<?
+		}
+	}
+?>                                      			
+		                                       		</select>
+		                                       </td>
+		                                       <td class="blk2" valign="top">Upload File :</td>
+
+		                                       <td class="blk2" valign="top">
+		                                       		<input type="file" name="work_issue_file" id="work_issue_file" onchange="return fileValidation()" />
+		                                       		<span style="color:red;">Choose only pdf, doc & docx File</span>
+		                                       </td>
+		                                 	</tr>                                  
+		                                   <tr>
+		                                       <td class="blk2" valign="top">Issue Detail :<span style="color:red;">*</span></td>
+		                                       <td class="blk2" valign="top"><textarea rows="3" cols="100"  name="work_issue_detail" id="work_issue_detail" class="tbox"></textarea></td>
+		                                        <td class="blk2b" width="18%" align="left" valign="top"><label for="work_issue_date"> Issue Date :<span style="color:red;">*</span> </label></td>
+		                                        <td align="left" valign="top"><input type="text" name="work_issue_date" id="work_issue_date" value=""  maxlength="10" size="10" class="tbox required" readonly="readonly" />&nbsp;<img src="images/calendar1.gif" alt="" title="" border="0" width="16" height="16" onclick="javascript:scwShow(document.getElementById('work_issue_date'),this)" /></td>
+		                                   </tr>
+											<tr>
+            									<td class="blk5b" colspan="2"><u>Issue Forward To: <span style="color:red;">*</span></u> </td>
+      										</tr>
+ <tr>
+									            <td width="100%" colspan="4"><div id="wing_list_div" style="display: block;">
+									                <fieldset>
+									                  <legend class="vlt3b">Secretary</legend>
+										                  <table align="center" width="98%" border="0" cellpadding="4" cellspacing="1">
+										                  <tr>                    
+										                    <td align="left" width="5%" class="blk2"><input type="checkbox" name="compliance_to_given_by[]" value="0*0*0*0*0*EIC" /></td>
+										                    <td align="left" width="45%"><span class="blk3b">Secretary</td>
+										                  </tr>
+										                </table>
+									                  </fieldset>
+									            </div></td>
+									          </tr>
+
+
+<?php
+if($_SESSION["sess_power_id"] != "CE" && $_SESSION["sess_power_id"] != "SE" ){
+ $get_wing_sql = "select w.wings_id
+,w.wings_name
+,(select  a.full_name from pm_auth_user a where a.wings_id=w.wings_id limit 1)as authority_user_name
+,(select desg_name from pm_designation where desg_value in ( select   a.power_id from pm_auth_user a where a.wings_id=w.wings_id limit 1 )) as designation
+from pm_wings w WHERE w.wings_id != 0
+";
+if($_SESSION["sess_power_id"] == "CE"){
+$get_wing_sql.= " AND w.wings_id != ".$_SESSION["sess_wings_id"]." ";
+}
+$get_wing_res = pg_query($get_wing_sql);
+$get_wing_cnt = pg_num_rows($get_wing_res);
+$breaker =0;
+?>
+									          <tr>
+									            <td width="100%" colspan="4"><div id="wing_list_div" style="display: block;">
+									                <fieldset>
+									                  <legend class="vlt3b">Chief Engineer</legend>
+									                  <table align="center" width="98%" border="0" cellpadding="4" cellspacing="1">
+									                  <tr>
+                    <?
+if($get_wing_cnt > 0){
+while($get_wing_row = pg_fetch_assoc($get_wing_res)){
+?>
+									                    <td align="left" width="5%" class="blk2"><input type="checkbox" name="compliance_to_given_by[]" value="<?php echo $get_wing_row['wings_id']?>*0*0*0*0*CE" /></td>
+									                    <td align="left" width="45%"><span class="blk3b">
+									                      <?php echo $get_wing_row['wings_name']?>
+									                      </td>
+                    <?
+    $breaker++;
+    if($breaker == 2)
+    {
+        echo "</tr><tr>";
+        $breaker = 0;
+    }
+
+}
+}
+?>
+									                  </tr>
+									                </table>
+									                  </fieldset>
+									            </div></td>
+									          </tr>
+<?
+}
+
+if($_SESSION["sess_power_id"] != "SE"){
+  $get_circle_sql = "select c.circle_id
+,c.circle_name
+,(select a.full_name from  pm_auth_user a where a.circle_id=c.circle_id limit 1)as authority_user_name
+,(select desg_name from  pm_designation where desg_value in ( select   a.power_id from  pm_auth_user a where a.circle_id=c.circle_id limit 1 )) as designation
+from  circle c where c.is_active='Y' AND c.circle_id != 0 ";
+if($_SESSION["session_circle_id"] != 0){
+$get_circle_sql.= " AND c.circle_id = ".$_SESSION["session_circle_id"]." ";
+}
+if($circleid != 0){
+$get_circle_sql.= " AND c.circle_id = ".$circleid." ";
+}
+$get_circle_sql.=" ORDER BY c.circle_name";
+$get_circle_res = pg_query($get_circle_sql);
+$get_circle_cnt = pg_num_rows($get_circle_res);
+?>
+								          <tr>
+								            <td width="100%" colspan="4"><div id="wing_list_div">
+								                <fieldset>
+								                  <legend class="vlt3b">Superitend Engineer</legend>
+								                  <table align="center" width="98%" border="0" cellpadding="4" cellspacing="1">
+								                  <tr>
+                    <?
+$breaker = 0;
+if($get_circle_cnt > 0){
+while($get_circle_row = pg_fetch_assoc($get_circle_res)){
+?>
+								                    <td align="left" width="5%" class="blk2"><input type="checkbox" name="compliance_to_given_by[]" value="0*<?php echo $get_circle_row['circle_id']?>*0*0*0*SE" /></td>
+								                    <td align="left" width="45%"><span class="blk3b">
+								                      <?php echo $get_circle_row['circle_name']?>
+								                      </td>
+                    <?
+$breaker++;
+if($breaker == 2)
+{
+echo "</tr><tr>";
+$breaker = 0;
+}
+}
+}
+?>
+									                  </tr>
+									                </table>
+									                  </fieldset>
+									            </div></td>
+									          </tr>
+          <?
+}
+
+if($_SESSION["sess_power_id"] != "EIC" && $_SESSION["sess_power_id"] != "CE"  && $_SESSION["sess_power_id"] != "EE"){
+$get_division_sql = "select d.circle_id,d.division_id
+,d.division_name
+,(select a.full_name from pm_auth_user a where a.division_id=d.division_id limit 1)as authority_user_name
+
+,(select desg_name from pm_designation where desg_value in ( select a.power_id from pm_auth_user a where a.division_id=d.division_id limit 1)) as designation
+from division d  WHERE d.division_id != 0 ";
+if($_SESSION["session_circle_id"] != 0){
+$get_division_sql.= " AND d.circle_id = ".$_SESSION["session_circle_id"]." ";
+}
+if($_SESSION["session_division_id"] != 0){
+$get_division_sql.= " AND d.division_id = ".$_SESSION["session_division_id"]." ";
+}
+$get_division_sql.=" ORDER BY d.division_name";
+$get_division_res = pg_query($get_division_sql);
+$get_division_cnt = pg_num_rows($get_division_res);
+?>
+								          <tr>
+								            <td width="100%" colspan="4"><div id="wing_list_div">
+								                <fieldset>
+								                  <legend class="vlt3b">Executive Engineer</legend>
+								                  <table align="center" width="98%" border="0" cellpadding="4" cellspacing="1">
+								                  <tr>
+                    <?
+$breaker = 0;
+if($get_division_cnt > 0){
+while($get_division_row = pg_fetch_assoc($get_division_res)){
+?>
+								                    <td align="left" width="5%" class="blk2"><input type="checkbox" name="compliance_to_given_by[]" value="0*<?php echo $get_division_row['circle_id']?>*<?php echo $get_division_row['division_id']?>*0*0*EE" /></td>
+								                    <td align="left" width="45%"><span class="blk3b">
+								                      <?php echo $get_division_row['division_name']?>
+								                      </td>
+                    <?
+$breaker++;
+if($breaker == 2)
+{
+echo "</tr><tr>";
+$breaker = 0;
+}
+}
+}
+?>
+									                  </tr>
+									                </table>
+									                  </fieldset>
+									            </div></td>
+									          </tr>
+<?
+}
+if($_SESSION["sess_power_id"] != "EE" && $_SESSION["sess_power_id"] != "AE"){
+///select * from usp_get_subdiv_dtls_inspections (".$_SESSION["session_division_id"].",".$_SESSION["session_sub_division_id"].",".$_SESSION["session_circle_id"].")
+$get_sub_division_sql = "select * from usp_get_subdiv_dtls_inspections (".$_SESSION["session_division_id"].",".$_SESSION["session_sub_division_id"].")";
+$get_sub_division_res = pg_query($get_sub_division_sql);
+$get_sub_division_cnt = pg_num_rows($get_sub_division_res);
+?>
+								          <tr>
+								            <td width="100%" colspan="4"><div id="wing_list_div">
+								                <fieldset>
+								                  <legend class="vlt3b">Assistant Engineer</legend>
+								                  <table align="center" width="98%" border="0" cellpadding="4" cellspacing="1">
+								                  <tr>
+                    <?
+$breaker = 0;
+if($get_sub_division_cnt > 0){
+while($get_sub_division_row = pg_fetch_assoc($get_sub_division_res)){
+//print_r($get_sub_division_row);exit;
+?>
+								                    <td align="left" width="5%" class="blk2">
+								                    <input type="checkbox" name="compliance_to_given_by[]" value="0*<?php echo $get_sub_division_row['circle_id']?>*<?php echo $get_sub_division_row['division_id']?>*<?php echo $get_sub_division_row['sub_division_id']?>*0*AE" /></td>
+								                    <td align="left" width="45%"><span class="blk3b">
+								                      <?php echo $get_sub_division_row['sub_division_name']?>
+								                      </td>
+                    <?
+$breaker++;
+if($breaker == 2)
+{
+echo "</tr><tr>";
+$breaker = 0;
+}
+}
+}
+?>
+									                  </tr>
+									                </table>
+									                  </fieldset>
+									            </div></td>
+									          </tr>
+
+<?
+}
+if($_SESSION["sess_power_id"] != "EE" && $_SESSION["sess_power_id"] != "AE" && $_SESSION["sess_power_id"] != "JE" ){
+$get_circle_sql = "select * from usp_get_section_dtls_inspections ".$_SESSION["session_division_id"].",".$_SESSION["session_sub_division_id"].",".$_SESSION["session_section_id"].",".$_SESSION["session_circle_id"]."";
+//echo $get_sub_division_sql;
+$get_circle_res = pg_query($get_circle_sql);
+$get_circle_cnt = pg_num_rows($get_circle_res);
+?>
+									          <tr>
+									            <td width="100%" colspan="4"><div id="wing_list_div">
+									                <fieldset>
+									                  <legend class="vlt3b">Junior Engineer</legend>
+									                  <table align="center" width="98%" border="0" cellpadding="4" cellspacing="1">
+									                  <tr>
+                    <?
+$breaker = 0;
+if($get_circle_cnt > 0){
+while($get_circle_row = pg_fetch_assoc($get_circle_res)){
+//print_r($get_circle_row);exit;
+?>
+										                    <td align="left" width="5%" class="blk2">
+										                    <input type="checkbox" name="compliance_to_given_by[]" value="0*<?php echo $get_circle_row['circle_id']?>*<?php echo $get_circle_row['division_id']?>*<?php echo $get_circle_row['sub_division_id']?>*<?php echo $get_circle_row['section_id']?>*JE" /></td>
+										                    <td align="left" width="45%"><span class="blk3b">
+										                      <?php echo $get_circle_row['section_name']?>
+										                      </td>
+                    <?
+$breaker++;
+if($breaker == 2)
+{
+echo "</tr><tr>";
+$breaker = 0;
+}
+}
+}
+?>
+									                  </tr>
+									                </table>
+									                  </fieldset>
+									            </div></td>
+									          </tr>		                                   
+<?
+}
+?>													
+	                                            <tr>
+	                                              <td align="center" colspan="4">
+	                                                  <input type="submit" name="submit" value="Add Issue"  class="btn"  />&nbsp;
+													   <input type="reset" value="Reset" class="btn"/>
+	                                              </td>
+	                                          </tr>                                                                         
+                                    	</table>
+                                    </form>
+                                    </div>
+                                </td>
+                            </tr>
+                                                                             
+               
+                    </table>                    
+					<!-- Ends of Content Area -->
+				</td>
+			</tr>
+			
+
+		</table>
+	</td>
+  </tr>
+<? include_once ('common/footer.php'); ?>
+</table>
+
+<script language="javascript" type="text/javascript">
+		var obj;
+		obj = document.frmPMS;
+</script>
+</body>
+</html>

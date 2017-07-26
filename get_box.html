@@ -1,0 +1,312 @@
+<!-- For POP UP DIV-->
+    <div id="mainDiv" style="display:none;cursor:default;">
+    	<div id="headerDiv">
+			<div id="titleDiv">
+				<span class="blk2b"></span>
+			</div>
+			<div id="closeDiv" >
+               <img src="./images/close.png" style="cursor: pointer;" onclick="javascript:hidePopUpDiv();"height="22" width="22" />
+            </div>
+    	</div>
+    	<div id="contentDiv" >
+			<iframe src="index.php?cp=c51ce410c124a10e0db5e4b97fc2af39" id="exeFrame" frameborder="0" name="test" width="100%">You need a Frames Capable browser to view this content.</iframe>
+    	</div>
+    </div>
+	<div id="bgDiv" style="display:none;width:auto;height:auto;">
+	</div>
+    <!-- For POP UP DIV-->
+
+<script language="javascript" type="text/javascript">
+	var obj;
+	obj = document.frmFMS;
+	function showPopUpDiv(page,wid,aid,action)
+	{
+		$("#mainDiv").hide();
+        $("#exeFrame").attr('src','index.php?page='+page+'&wid='+wid+'&aid='+aid+'&action='+action);
+        var heightDiv = $(window).height() - 125;
+        $("#exeFrame").attr('height',heightDiv + 'px');
+        $(document).ready(function() {
+        $.blockUI({
+            message: $('#mainDiv'),
+            fadeIn: 700,
+            fadeOut: 700,
+            css: { top: '4%',
+
+                    border: '4px solid #525252',
+                	width:'900px',
+                	height:'650px',
+                    '-webkit-border-radius': '10px',
+                    '-moz-border-radius': '10px',
+                    left: ($(window).width() - 900) /2 + 'px',
+                    height:($(window).height() - 80) + 'px'
+                }
+            });
+        });
+		
+	
+
+
+        /*
+        document.getElementById('bgDiv').style.display = 'block';
+		if (typeof window.innerWidth != 'undefined')
+		{
+			viewportwidth = window.innerWidth,
+			viewportheight = window.innerHeight
+		}
+		else if (typeof document.documentElement != 'undefined' && typeof document.documentElement.clientWidth !='undefined' && document.documentElementclientWidth != 0)
+		{
+			viewportwidth = document.documentElement.clientWidth,
+			viewportheight = document.documentElement.clientHeight
+		}
+		else
+		{
+			viewportwidth = document.getElementsByTagName('body')[0].clientWidth,
+			viewportheight = document.getElementsByTagName('body')[0].clientHeight
+		}
+
+		var windowWidth =  viewportwidth;
+		var windowHeight= viewportheight;
+		//alert(windowWidth);
+		//var tempHeight,tempWidth;
+
+		//var windowWidth = $(document).width();
+		//var windowHeight = $(document).height();
+		var mainDivWidth = parseInt((windowWidth-900)/2);
+		var mainDivHeight = parseInt(windowHeight/6);
+
+		//alert(mainDivWidth);
+
+		document.getElementById('bgDiv').style.width = windowWidth+'px';
+		document.getElementById('bgDiv').style.height = windowHeight+'px';
+
+
+		document.getElementById('mainDiv').style.left = mainDivWidth+'px';
+		document.getElementById('mainDiv').style.top = '100px';
+		//document.getElementById('mainDiv').style.display = 'block';
+	    $("#exeFrame").attr('src','index.php?cp='+page+'&pid='+pid+'&aid='+aid);
+	    //$("#mainDiv").fadeIn(1500);
+        $("#mainDiv").animate({height:'toggle'},1500);
+        */
+	}
+	function viewInspectionComplianceDetail(page)
+	{
+		$("#mainDiv").hide();
+        $("#exeFrame").attr('src',page);
+        var heightDiv = $(window).height() - 125;
+        $("#exeFrame").attr('height',heightDiv + 'px');
+        $(document).ready(function() {
+        $.blockUI({
+            message: $('#mainDiv'),
+            fadeIn: 700,
+            fadeOut: 700,
+            css: { top: '4%',
+
+                    border: '4px solid #525252',
+                	width:'900px',
+                	height:'650px',
+                    '-webkit-border-radius': '10px',
+                    '-moz-border-radius': '10px',
+                    left: ($(window).width() - 900) /2 + 'px',
+                    height:($(window).height() - 80) + 'px'
+                }
+            });
+        });
+	}
+	function addissueremark(page)
+	{
+	$("#mainDiv").hide();
+        $("#exeFrame").attr('src',page);
+        var heightDiv = $(window).height() - 125;
+        $("#exeFrame").attr('height',heightDiv + 'px');
+        $(document).ready(function() {
+        $.blockUI({
+		message: $('#mainDiv'),
+		fadeIn: 700,
+		fadeOut: 700,
+		css: { top: '4%',
+    
+			border: '4px solid #525252',
+			    width:'700px',
+			    height:'500px',
+			'-webkit-border-radius': '10px',
+			'-moz-border-radius': '10px',
+			left: ($(window).width() - 900) /2 + 'px',
+			height:($(window).height() - 80) + 'px'
+		    }
+		});
+	    });
+	}
+	function showPopUpDivcompliance(page,issuedetailid)
+	{
+		$("#mainDiv").hide();
+        $("#exeFrame").attr('src','index.php?page='+page+'&issuedetailid='+issuedetailid);
+        var heightDiv = $(window).height() - 125;
+        $("#exeFrame").attr('height',heightDiv + 'px');
+        $(document).ready(function() {
+        $.blockUI({
+            message: $('#mainDiv'),
+            fadeIn: 700,
+            fadeOut: 700,
+            css: { top: '4%',
+
+                    border: '4px solid #525252',
+                	width:'900px',
+                	height:'650px',
+                    '-webkit-border-radius': '10px',
+                    '-moz-border-radius': '10px',
+                    left: ($(window).width() - 900) /2 + 'px',
+                    height:($(window).height() - 80) + 'px'
+                }
+            });
+        });		
+	
+	}
+	
+		function showPopUpDivIssue(page,issuewworkid,circleid,divisionid,entrytype,issuetypeid)
+	{
+		$("#mainDiv").hide();
+        $("#exeFrame").attr('src','index.php?page='+page+'&issuewworkid='+issuewworkid+'&circleid='+circleid+'&divisionid='+divisionid+'&entrytype='+entrytype+'&issuetypeid='+issuetypeid);
+        var heightDiv = $(window).height() - 125;
+        $("#exeFrame").attr('height',heightDiv + 'px');
+        $(document).ready(function() {
+        $.blockUI({
+            message: $('#mainDiv'),
+            fadeIn: 700,
+            fadeOut: 700,
+            css: { top: '4%',
+
+                    border: '4px solid #525252',
+                	width:'1000px',
+                	height:'950px',
+                    '-webkit-border-radius': '10px',
+                    '-moz-border-radius': '10px',
+                    left: ($(window).width() - 900) /2 + 'px',
+                    height:($(window).height() - 80) + 'px'
+                }
+            });
+        });		
+	
+	}
+	
+	
+	
+	
+	function showPopUpDivIssueListing(page,issuewworkid,entrytype,issuetypeid,ropt)
+	{
+		$("#mainDiv").hide();
+        $("#exeFrame").attr('src','index.php?page='+page+'&issuewworkid='+issuewworkid+'&entrytype='+entrytype+'&issuetypeid='+issuetypeid);
+        var heightDiv = $(window).height() - 125;
+        $("#exeFrame").attr('height',heightDiv + 'px');
+        $(document).ready(function() {
+        $.blockUI({
+            message: $('#mainDiv'),
+            fadeIn: 700,
+            fadeOut: 700,
+            css: { top: '4%',
+
+                    border: '4px solid #525252',
+                	width:'1000px',
+                	height:'950px',
+                    '-webkit-border-radius': '10px',
+                    '-moz-border-radius': '10px',
+                    left: ($(window).width() - 900) /2 + 'px',
+                    height:($(window).height() - 80) + 'px'
+                }
+            });
+        });		
+	
+	}	
+	
+	function showPopUpDivIssueComp(page,issuewworkid,entrytype,issuetypeid,ropt)
+	{
+		$("#mainDiv").hide();
+        $("#exeFrame").attr('src','index.php?page='+page+'&issuewworkid='+issuewworkid+'&entrytype='+entrytype+'&ropt='+ropt+'&issuetypeid='+issuetypeid);
+        var heightDiv = $(window).height() - 125;
+        $("#exeFrame").attr('height',heightDiv + 'px');
+        $(document).ready(function() {
+        $.blockUI({
+            message: $('#mainDiv'),
+            fadeIn: 700,
+            fadeOut: 700,
+            css: { top: '4%',
+
+                    border: '4px solid #525252',
+                	width:'1000px',
+                	height:'950px',
+                    '-webkit-border-radius': '10px',
+                    '-moz-border-radius': '10px',
+                    left: ($(window).width() - 900) /2 + 'px',
+                    height:($(window).height() - 80) + 'px'
+                }
+            });
+        });		
+	
+	}
+	function showDatasheetPopUpDiv(page,wid)
+	{
+		$("#mainDiv").hide();
+        $("#exeFrame").attr('src','index.php?page='+page+'&wid='+wid);
+        var heightDiv = $(window).height() - 125;
+        $("#exeFrame").attr('height',heightDiv + 'px');
+        $(document).ready(function() {
+        $.blockUI({
+            message: $('#mainDiv'),
+            fadeIn: 700,
+            fadeOut: 700,
+            css: { top: '4%',
+
+                    border: '4px solid #525252',
+                	width:'1000px',
+                	height:'950px',
+                    '-webkit-border-radius': '10px',
+                    '-moz-border-radius': '10px',
+                    left: ($(window).width() - 900) /2 + 'px',
+                    height:($(window).height() - 80) + 'px'
+                }
+            });
+        });		
+	
+	}
+    function showPopUpDivIssueComp(issuedetailid,page)
+    {
+        $("#mainDiv").hide();
+        $("#exeFrame").attr('src','index.php?page='+page+'&issuedetailid='+issuedetailid);
+        var heightDiv = $(window).height() - 125;
+        $("#exeFrame").attr('height',heightDiv + 'px');
+        $(document).ready(function() {
+        $.blockUI({
+            message: $('#mainDiv'),
+            fadeIn: 700,
+            fadeOut: 700,
+            css: { top: '4%',
+
+                    border: '4px solid #525252',
+                    width:'1000px',
+                    height:'950px',
+                    '-webkit-border-radius': '10px',
+                    '-moz-border-radius': '10px',
+                    left: ($(window).width() - 900) /2 + 'px',
+                    height:($(window).height() - 80) + 'px'
+                }
+            });
+        });     
+    
+    }
+
+
+		
+	
+	function hidePopUpDiv()
+	{
+		$("#Search").click();
+		//alert('ok');
+        setTimeout($.unblockUI, 10);
+        //$("#mainDiv").animate({height:'toggle'},500)
+        //$("#mainDiv").fadeOut(500);
+		//$("#bgDiv").fadeOut(500);
+		//document.getElementById('mainDiv').style.display = 'none';
+		//document.getElementById('bgDiv').style.display = 'none';
+		//alert();
+		 //window.location.reload();
+	}
+</script>
